@@ -11,84 +11,84 @@ function getComputerChoice() {
     }
 }
 
-function getHumanChoice() {
-    let response = prompt("Your choice:");
-    if (response === null || response === undefined) {
-        alert('Please input your choice');
+let humanScore = 0;
+let computerScore = 0;
+
+function playRound(humanChoice, computerChoice) {
+    let result = document.querySelector('#results');
+    if (result === null) {
+        console.log('no result container');
         return;
     }
+    let text = document.createTextNode('Even!');
+    switch (humanChoice) {
+        case "rock":
+            if (computerChoice !== 'rock') {
+                if (computerChoice === 'paper') {
+                    computerScore++;
+                    text = document.createTextNode(`You lose! ${computerChoice} beats ${humanChoice}`);
+                } else {
+                    humanScore++;
+                    text = document.createTextNode(`You win! ${humanChoice} beats ${computerChoice}`);
+                }
+            }
+            break;
+        case 'paper':
+            if (computerChoice !== 'paper') {
+                if (computerChoice === 'scissors') {
+                    computerScore++;
+                    text = document.createTextNode(`You lose! ${computerChoice} beats ${humanChoice}`);
+                } else {
+                    humanScore++;
+                    text = document.createTextNode(`You win! ${humanChoice} beats ${computerChoice}`);
+                }
+            }
+            break;
+        case 'scissors':
+            if (computerChoice !== 'scissors') {
+                if (computerChoice === 'rock') {
+                    computerScore++;
+                    text = document.createTextNode(`You lose! ${computerChoice} beats ${humanChoice}`);
+                } else {
+                    humanScore++;
+                    text = document.createTextNode(`You win! ${humanChoice} beats ${computerChoice}`);
+                }
+            }
+            break;
 
-    response = response.toLowerCase();
-    if (response !== "rock" && response !== 'paper' && response !== 'scissors') {
-        alert('You must input rock, paper or scissors');
-        return;
+        default:
+            computerScore++;
+            text = document.createTextNode(`You lose! Your input is invalid!`);
+            break;
     }
-    return response;
 
+    result.appendChild(text);
+    result.appendChild(document.createElement('br'));
 }
 
 
+let root = document.querySelector('body');
 
-function playGame() {
-    let humanScore = 0;
-    let computerScore = 0;
+root.addEventListener('click', (e) => {
+    if (e.target.id !== 'rock' && e.target.id !== 'paper' && e.target.id !== 'scissors') {
+        console.log(e.target.id);
+        return;
+    }
 
-    function playRound(humanChoice, computerChoice) {
-        switch (humanChoice) {
-            case "rock":
-                if (computerChoice !== 'rock') {
-                    if (computerChoice === 'paper') {
-                        computerScore++;
-                        console.log(`You lose! ${computerChoice} beats ${humanChoice}`);
-                    } else {
-                        humanScore++;
-                        console.log(`You win! ${humanChoice} beats ${computerChoice}`);
-                    }
-                }
-                break;
-            case 'paper':
-                if (computerChoice !== 'paper') {
-                    if (computerChoice === 'scissors') {
-                        computerScore++;
-                        console.log(`You lose! ${computerChoice} beats ${humanChoice}`);
-                    } else {
-                        humanScore++;
-                        console.log(`You win! ${humanChoice} beats ${computerChoice}`);
-                    }
-                }
-                break;
-            case 'scissors':
-                if (computerChoice !== 'scissors') {
-                    if (computerChoice === 'rock') {
-                        computerScore++;
-                        console.log(`You lose! ${computerChoice} beats ${humanChoice}`);
-                    } else {
-                        humanScore++;
-                        console.log(`You win! ${humanChoice} beats ${computerChoice}`);
-                    }
-                }
-                break;
-
-            default:
-                computerScore++;
-                console.log(`You lose! Your input is invalid!`);
-                break;
+    playRound(e.target.id, getComputerChoice());
+    let result = document.querySelector('#results');
+    if (humanScore === 5 || computerScore === 5) {
+        if (humanScore > computerScore) {
+            result.textContent = `You win! result: ${humanScore}:${computerScore}`;
+        } else if (humanScore < computerScore) {
+            result.textContent = `You lose! result: ${humanScore}:${computerScore}`;
+        } else {
+            result.textContent = `Even. result: ${humanScore}:${computerScore}`;
         }
+
+        humanScore = 0;
+        computerScore = 0;
     }
-
-    for (let i = 0; i < 5; i++) {
-        playRound(getHumanChoice(), getComputerChoice());
-    }
-
-    if (humanScore > computerScore) {
-        console.log(`You win! result: ${humanScore}:${computerScore}`);
-    } else if (humanScore < computerScore) {
-        console.log(`You lose! result: ${humanScore}:${computerScore}`);
-    } else {
-        console.log(`Even. result: ${humanScore}:${computerScore}`);
-    }
-}
-
-playGame();
-
+    result.appendChild(document.createElement('br'));
+})
 
